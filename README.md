@@ -5,6 +5,5 @@ Analytical tools for finding synergy in combinations of treatments in a 3-drug s
 Dan Y. Zhang (zhangdy@gatech.edu)
 # Main Tools
 ##
-Tasks that this needs to do
- - Data simulation
- - Image processing
+Things to do:
+ - Folder 'Image Processing' is a work-in-progress, collection of old code used to rotate images onto grid
