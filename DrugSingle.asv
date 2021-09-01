@@ -21,12 +21,7 @@ classdef DrugSingle
       % Generate dose-response
       function doseResponse = generateDoseResponse(obj, conc)
           % conc is a vector of doses
-          x = conc;
-          Emax = obj.Emax;
-          E0 = obj.E0;
-          h = obj.Hill;
-          C = obj.EC50;
-          doseResponse = ((E0-Emax).*C.^h)./(C.^h + x.^h) + Emax;
+          doseResponse = ((obj.Emax-obj.E0).*obj.EC50.^obj.h)./(obj.EC50.^h + x.^h) + E0;
       end
    end
 end
