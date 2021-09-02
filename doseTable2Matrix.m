@@ -14,7 +14,7 @@ effect = doseTable.E12_bliss;
 [doses1, indConc1, indDose1] = unique(conc1);
 % doses = conc1(indConc), conc = doses(indDose);
 [doses2, indConc2, indDose2] = unique(conc2);
-[X, Y] = meshgrid(doses1, doses2); % can also use ndgrid, different orientation
+[X, Y] = ndgrid(doses1, doses2); % can also use ndgrid, different orientation
 Z = accumarray( [indDose1(:), indDose2(:)], effect, [], [], NaN ); % insert NaN if no value found
 
 doseMatrix = Z;
