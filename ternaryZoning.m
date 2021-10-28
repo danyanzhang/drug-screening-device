@@ -1,16 +1,17 @@
 % Divides cell data into ternary zones and plots subzones
 % Each zone is tagged with a number for subanalysis
 function cells = ternaryZoning(cells)
+% Cells structure:
+% cols: X, Y, c1, c2, c3, live, dead
 
 % load ternary plot packages
 addpath('TernaryPlot')
 addpath('ternary2')
 
-%load simulatedDataForTernaryTest.mat % cells table
-% Cells structure:
-% cols: X, Y, c1, c2, c3, live, dead
 
-thresholdMainZone = 0.08; % below 10% of drug is considered no drug
+% create zones
+
+thresholdMainZone = 0.08; % below __% of drug is considered no drug
 cells.zone = zeros(height(cells), 1);
 cells.viability = zeros(height(cells), 1);
 [cells.ternX cells.ternY] = ternCoord(cells.c1, cells.c2, cells.c3);
@@ -25,18 +26,26 @@ idx{3} = find(cells.c3 < thresholdMainZone);
 for i = 1:length(idx)
     cells.zone(idx{i}) = i;
 end
+% zone 0: middle portion of device
+% zone 1: interaction between 2 and 3
+% zone 2: interaction between 1 and 3
+% zone 3: interaction between 1 and 2
 
-% plot zones on main map and ternary plot
+
+%==============================================================================
+% figure 1. zones highlighted on ternary plot
 f = figure;
 tiledlayout(1,2)
 
+% disable plotting on spatial grid
+%{
 ax1 = nexttile;
 plot(cells.X, cells.Y, '.k')
 hold on
 for i = 1:length(idx)
     plot(cells.X(idx{i}), cells.Y(idx{i}), '.')
 end
-
+%}
 ax2 = nexttile;
 plot(cells.ternX, cells.ternY, '.k')
 hold on
@@ -48,21 +57,27 @@ axis([0, 1, 0, 0.5*tand(60)])
 f.Position = [300 300 1200 420];
 
 
+
+%==============================================================================
+% figure 2. "smile plot" viability axis chart thing
+
 % perform a moving window average across data (using convolution function conv)
 % test examples a and b (for no drug c)
 
 % viability along drug23
-a = cells.c2(idx{1});
-b = cells.c3(idx{1});
+a = cells.c2(idx{1}); % concentration of a
+b = cells.c3(idx{1}); % concentration of b
 live = cells.live(idx{1});
 sumab = cells.c2(idx{1}) + cells.c3(idx{1}); % check to see total proportion of drug
-xaxis = b./sumab;
+xaxis = b./sumab; % normalize b to the sumab
 
+% create new xaxis [0, 1] proportion of b to sumab
 [sortedAxis, I] = sort(xaxis);
 liveSorted = live(I);
-viability = movmean(liveSorted, length(idx{1}).*0.20);
+viability = movmean(liveSorted, length(idx{1}).*0.20); % 20% of windows sorting
+
 figure
-plot(sortedAxis, viability, '-') % moving average across 10% of cells
+plot(sortedAxis, viability, '-') % moving average across __% of cells
 [revSort, I2] = sort(I); % reverse sort
 cells.viability(idx{1}) = viability(I2); % assign viability to main table
 
@@ -105,18 +120,22 @@ ylabel('Viability')
 
 % Rolling ball for center viability
 idx{4} = find(cells.zone == 0);
-cells.viability(idx{4}) = rollingViability(cells(idx{4},:), 400); % what units is this r?
+%cells.viability(idx{4}) = rollingViability(cells(idx{4},:), 400); % what units is this r?
+% ^ temporariliy disabled, rolling ball viability
 
 
-% plot ternary plot
+%==============================================================================
+% figure 3. plot ternary plot with shaded zones averaged across
 figure
 tersurf(cells.c1, cells.c2, cells.c3, cells.viability)
 
+% ignore rolling ball viability
+%{
 figure % only rolling ball, compare accuracy
 cells2 = cells;
 cells2.viability = rollingViability(cells2, 400);
 tersurf(cells2.c1, cells2.c2, cells2.c3, cells2.viability)
-
+%}
 
 
 
