@@ -23,7 +23,6 @@ result = accumarray( [indDose2(:), indDose1(:), indDose3(:)], effect, [], [], Na
 
 doseMatrix = result;
 
-
 xmax = 200;
 ymax = 400;
 zmax = 2;
