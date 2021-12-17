@@ -104,9 +104,9 @@ T3 = renamevars(T3,["x","y","C1","C2","C3"], ...
 
 % Lines of additivity
 % Plot from first point to last point
-plot([x23(1), x23(end)], [viability23(1), viability23(end)], '--', 'Color', color.grey)
-plot([x13(1), x13(end)], [viability13(1), viability13(end)], '--', 'Color', color.grey)
-plot([x12(1), x12(end)], [viability12(1), viability12(end)], '--', 'Color', color.grey)
+plot([x23(1), x23(end)], [viability23(1), viability23(end)], '-', 'Color', color.grey, 'LineWidth', 2)
+plot([x13(1), x13(end)], [viability13(1), viability13(end)], '-', 'Color', color.grey, 'LineWidth', 2)
+plot([x12(1), x12(end)], [viability12(1), viability12(end)], '-', 'Color', color.grey, 'LineWidth', 2)
 
 % legend and chart settings
 legend({"MRX-VCR", "MTX-VCR", "MTX-MRX", "Lines of Additivity"}, 'Location', 'SouthEast')
