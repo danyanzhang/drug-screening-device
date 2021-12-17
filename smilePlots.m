@@ -20,6 +20,7 @@ condition = '3drug'; % options are 2drug, 3drug, and control
 color.darkBlue = [0, 63, 92]/255;
 color.magenta = [188, 80, 144]/255;
 color.orange = [255, 166, 0]/255;
+color.grey = [100, 100, 100]/255;
 
 
 switch condition % load the appropriate datasets
@@ -80,14 +81,13 @@ filter_width = 0.1;
 [x13, viability13] = viabilityOverDrugRatio(T13, filter_width);
 [x12, viability12] = viabilityOverDrugRatio(T12, filter_width);
 
-plot(x23, medfilt1(smooth(viability23, .2)), '-', 'LineWidth', 3, 'Color', color.darkBlue)
-plot(x13, medfilt1(smooth(viability13, .2)), '-', 'LineWidth', 3, 'Color', color.magenta)
-plot(x12, medfilt1(smooth(viability12, .2)), '-', 'LineWidth', 3, 'Color', color.orange)
+viability23_smoothed = medfilt1(smooth(viability23, .2));
+viability13_smoothed = medfilt1(smooth(viability13, .2));
+viability12_smoothed = medfilt1(smooth(viability12, .2));
 
-legend({"MRX-VCR", "MTX-VCR", "MTX-MRX"}, 'Location', 'SouthEast')
-xlabel('Ratio Drug B/A')
-ylabel('Viability (%)')
-set(gca,'FontSize',14)
+plot(x23, viability23_smoothed, '-', 'LineWidth', 3, 'Color', color.darkBlue)
+plot(x13, viability13_smoothed, '-', 'LineWidth', 3, 'Color', color.magenta)
+plot(x12, viability12_smoothed, '-', 'LineWidth', 3, 'Color', color.orange)
 
 
 %% AUC of T1, T2, and T3 separately
@@ -101,6 +101,18 @@ T3 = renamevars(T3,["x","y","C1","C2","C3"], ...
 [T23_1, T13_1, T12_1] = isolatePair(T1, 8); % different replicates
 [T23_2, T13_2, T12_2] = isolatePair(T2, 8);
 [T23_3, T13_3, T12_3] = isolatePair(T3, 8);
+
+% Lines of additivity
+% Plot from first point to last point
+plot([x23(1), x23(end)], [viability23(1), viability23(end)], '--', 'Color', color.grey)
+plot([x13(1), x13(end)], [viability13(1), viability13(end)], '--', 'Color', color.grey)
+plot([x12(1), x12(end)], [viability12(1), viability12(end)], '--', 'Color', color.grey)
+
+% legend and chart settings
+legend({"MRX-VCR", "MTX-VCR", "MTX-MRX", "Lines of Additivity"}, 'Location', 'SouthEast')
+xlabel('Ratio Drug B/A')
+ylabel('Viability')
+set(gca,'FontSize',14)
 
 
 
