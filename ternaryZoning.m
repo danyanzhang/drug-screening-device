@@ -31,7 +31,8 @@ end
 % zone 2: interaction between 1 and 3
 % zone 3: interaction between 1 and 2
 
-
+figure
+tersurf(cells.c1, cells.c2, cells.c3, cells.live)
 %==============================================================================
 % figure 1. zones highlighted on ternary plot
 f = figure;
